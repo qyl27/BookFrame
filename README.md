@@ -1,4 +1,5 @@
-# BookFrame
+# BookFrame / 书籍展示框
+
 ## Description（介绍）
 
 A bukkit plugin to show the book content when in the item frame.
