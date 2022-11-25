@@ -5,11 +5,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class BookFrame extends JavaPlugin {
+    public static final String VERSION = "@version@";
 
     @Override
     public void onEnable() {
         // Plugin startup logic
-        getLogger().info("BookFrame is now loading.");
+        getLogger().info("BookFrame ver: " + VERSION);
 
         Bukkit.getPluginManager().registerEvents(new EventPlayerInteractEntity(), this);
     }

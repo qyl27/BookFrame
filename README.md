@@ -4,7 +4,7 @@
 
 A bukkit plugin to show the book content when in the item frame.
 
-一个Bukkit插件，让成书被放在展示框上的时候，右键可以阅读，Shift+右键旋转方向。
+一个Bukkit插件，让书与笔或者成书被放在展示框上的时候，右键可以阅读，Shift+右键旋转方向。
 
 ## Gallery（效果展示）
 

@@ -1,7 +1,0 @@
-name: BookFrame
-version: @version@
-main: cx.rain.mc.bukkit.bookframe.BookFrame
-api-version: 1.16
-prefix: BookFrame
-authors: [AmemiyaSigure]
-description: A bukkit plugin to show the book content when in the item frame.

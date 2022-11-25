@@ -1,12 +1,14 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'fr.il_totore.manadrop' version '0.4.2'
+}
 
 group = 'cx.rain.mc.bukkit'
-version = '1.1.0'
+version = '1.2.0'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
@@ -18,14 +20,44 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+    maven {
+        name = 'Jitpack'
+        url = 'https://jitpack.io'
+    }
+    flatDir {
+        dir 'libs'
+    }
+}
+
+spigot {
+    desc {
+        named 'BookFrame'
+        version project.version
+        authors 'qyl27'
+        main 'cx.rain.mc.bukkit.bookframe.BookFrame'
+        description 'A bukkit plugin to show the book content when in the item frame.'
+        website 'https://github.com/qyl27/BookFrame'
+//        load 'postworld'
+        apiVersion '1.19'
+    }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.18-rc3-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
 }
 
 processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
-    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+processResources.finalizedBy(spigotPlugin)
+
+import org.apache.tools.ant.filters.ReplaceTokens
+task injectString(type: Copy) {
+    from ('src/main/java') {
+        include '**/*.java'
+        filter(ReplaceTokens, tokens: [version: project.version])
+    }
+    into "${buildDir}/generated/java"
+}
+compileJava.source = "${buildDir}/generated/java"
+compileJava.dependsOn injectString

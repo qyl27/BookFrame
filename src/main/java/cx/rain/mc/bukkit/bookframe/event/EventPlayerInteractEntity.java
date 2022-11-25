@@ -14,17 +14,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class EventPlayerInteractEntity implements Listener {
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        Entity entity = event.getRightClicked();
-        Player player = event.getPlayer();
+        var entity = event.getRightClicked();
+        var player = event.getPlayer();
 
-        if (entity instanceof ItemFrame) {
-            ItemFrame frame = (ItemFrame) entity;
-
+        if (entity instanceof ItemFrame frame) {
             if (player.isSneaking()) {
                 return;
             }
 
-            ItemStack item = frame.getItem();
+            var item = frame.getItem();
             if (item.getType().equals(Material.WRITTEN_BOOK)) {
                 frame.setRotation(frame.getRotation().rotateCounterClockwise());
                 player.openBook(item);
@@ -33,14 +31,24 @@ public class EventPlayerInteractEntity implements Listener {
             if (item.getType().equals(Material.WRITABLE_BOOK)) {
                 frame.setRotation(frame.getRotation().rotateCounterClockwise());
 
-                ItemMeta meta = item.getItemMeta();
-                // I believe the meta of writable book is BookMeta.
-                assert meta instanceof BookMeta;
-                BookMeta bookMeta = (BookMeta) meta;
+                // It has item meta, ignore may NPE warn.
+                var meta = item.getItemMeta();
 
-                ItemStack tmpStack = new ItemStack(Material.WRITTEN_BOOK);
-                tmpStack.setItemMeta(bookMeta);
-                player.openBook(tmpStack);
+                // It must be a BookMeta.
+                if (meta instanceof BookMeta bookMeta) {
+                    var writtenBook = new ItemStack(Material.WRITTEN_BOOK);
+                    var writtenMeta = writtenBook.getItemMeta();
+
+                    if (writtenMeta instanceof BookMeta writtenBookMeta) {
+                        var pages = bookMeta.getPages();
+                        writtenBookMeta.setPages(pages);
+                        writtenBookMeta.setAuthor("Anonymous");
+                        writtenBookMeta.setTitle("Book");
+
+                        writtenBook.setItemMeta(writtenBookMeta);
+                        player.openBook(writtenBook);
+                    }
+                }
             }
         }
     }
