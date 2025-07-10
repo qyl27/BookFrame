@@ -2,27 +2,30 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'fr.il_totore.manadrop' version '0.4.2'
+//    id 'io.papermc.paperweight.userdev' version '2.0.0-beta.17'
+    id 'com.rikonardo.papermake' version '1.0.6'
 }
 
 group = 'cx.rain.mc.bukkit'
-version = '1.2.0'
+version = '1.3.0'
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()
+
     maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = 'dmulloy2-repo'
+        url = 'https://repo.dmulloy2.net/repository/public/'
     }
     maven {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
-    }
-    maven {
-        name = 'Jitpack'
-        url = 'https://jitpack.io'
     }
     flatDir {
         dir 'libs'
@@ -37,13 +40,17 @@ spigot {
         main 'cx.rain.mc.bukkit.bookframe.BookFrame'
         description 'A bukkit plugin to show the book content when in the item frame.'
         website 'https://github.com/qyl27/BookFrame'
-//        load 'postworld'
-        apiVersion '1.19'
+        load 'postworld'
+        apiVersion '1.21'
     }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 processResources {
@@ -51,13 +58,8 @@ processResources {
 }
 processResources.finalizedBy(spigotPlugin)
 
-import org.apache.tools.ant.filters.ReplaceTokens
-task injectString(type: Copy) {
-    from ('src/main/java') {
-        include '**/*.java'
-        filter(ReplaceTokens, tokens: [version: project.version])
-    }
-    into "${buildDir}/generated/java"
+devServer {
 }
-compileJava.source = "${buildDir}/generated/java"
-compileJava.dependsOn injectString
+//runServer {
+//    minecraftVersion('1.21.4')
+//}
