@@ -22,7 +22,7 @@ public class BlockHandler implements Listener {
             return;
         }
 
-        if (!(block instanceof org.bukkit.block.ChiseledBookshelf bookshelf)) {
+        if (!(block.getState() instanceof org.bukkit.block.ChiseledBookshelf bookshelf)) {
             return;
         }
 
@@ -50,10 +50,15 @@ public class BlockHandler implements Listener {
             return;
         }
 
+        var playerInventory = player.getInventory();
+        if (playerInventory.getItemInMainHand().isEmpty()) {
+            return;
+        }
+
         var inventory = bookshelf.getInventory();
         var item = inventory.getItem(clickedSlot);
         if (BookShowingHelper.isBook(item)) {
-
+            BookShowingHelper.openBook(player, item);
             event.setCancelled(true);
         }
     }
